@@ -47,6 +47,9 @@ export class ProductsService {
 
   private handlerDBException(error: any, message: string) {
     if (error.code === '23505') throw new BadRequestException(error.detail);
+    if (error.code === '23503') throw new BadRequestException(error.detail);
+    if (error.code === '23502') throw new BadRequestException(error.detail);
+    console.log(error);
     this.logger.error(error);
     throw new InternalServerErrorException(message);
   }
