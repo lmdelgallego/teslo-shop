@@ -24,13 +24,12 @@ export class ProductsController {
 
   @Get()
   findAll(@Query() paginationDTO: PaginationDTO) {
-    // console.log(paginationDTO);
     return this.productsService.findAll(paginationDTO);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.productsService.findOne(term);
   }
 
   @Patch(':id')
