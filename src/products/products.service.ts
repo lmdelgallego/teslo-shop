@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -29,20 +30,29 @@ export class ProductsService {
     }
   }
 
+  // TODO: Paginar los resultados
   findAll() {
-    return `This action returns all products`;
+    return this.productRepository.find({
+      order: {
+        title: 'ASC',
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    const product = await this.productRepository.findOneBy({ id });
+    if (!product)
+      throw new NotFoundException(`Product with id ${id} not found`);
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product ${updateProductDto}`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const product = await this.findOne(id);
+    await this.productRepository.remove(product);
   }
 
   private handlerDBException(error: any, message: string) {
