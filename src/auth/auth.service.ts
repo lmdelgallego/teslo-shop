@@ -40,8 +40,7 @@ export class AuthService {
       select: { email: true, password: true },
     });
     if (!user) throw new UnauthorizedException('Invalid email or password');
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
-    if (!isPasswordValid)
+    if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Invalid email or password');
 
     // TODO: Return JWT token
