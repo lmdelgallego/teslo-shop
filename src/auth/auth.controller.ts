@@ -21,11 +21,15 @@ export class AuthController {
 
   @Get('private')
   @UseGuards(AuthGuard())
-  testingPrivateRoute(@GetUser() user: User) {
+  testingPrivateRoute(
+    @GetUser() user: User,
+    @GetUser('email') userEmail: string,
+  ) {
     console.log(user);
     return {
       ok: true,
       user,
+      userEmail,
     };
   }
 }
