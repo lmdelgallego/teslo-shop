@@ -20,9 +20,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<User> {
-    const { email } = payload;
+    const { id } = payload;
 
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) throw new UnauthorizedException('Token not valid');
     if (!user.isActive)
@@ -30,6 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         'User is inactive, talk with the admin to activate your account',
       );
 
-    return;
+    return user;
   }
 }
