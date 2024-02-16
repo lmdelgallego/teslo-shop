@@ -55,6 +55,18 @@ export class AuthService {
     };
   }
 
+  async checkAuthStatus(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: { password: false },
+    });
+    if (!user) throw new UnauthorizedException('Invalid user');
+    return {
+      ...user,
+      token: this.getJWTToken({ id: user.id }),
+    };
+  }
+
   private getJWTToken(payload: JwtPayload): string {
     const token = this.jwtService.sign(payload);
     return token;
