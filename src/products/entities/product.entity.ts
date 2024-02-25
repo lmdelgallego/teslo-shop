@@ -15,54 +15,84 @@ import { ApiProperty } from '@nestjs/swagger';
   name: 'products',
 })
 export class Product {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'f6720de4-4f50-4991-8ed2-65a15b91f1b0',
+    description: 'Unique identifier',
+    uniqueItems: true,
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Nike Air Max 90',
+    description: 'Product title',
+  })
   @Column('text', {
     unique: true,
   })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 100.0,
+    description: 'Product price',
+  })
   @Column('float', {
     default: 0,
   })
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'The Nike Air Max 90 is a true icon',
+    description: 'Product description',
+  })
   @Column({
     type: 'text',
     nullable: true,
   })
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'nike_air_max_90',
+    description: 'Product slug - for SEO',
+    uniqueItems: true,
+  })
   @Column({
     type: 'text',
     unique: true,
   })
   slug: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 10,
+    description: 'Product stock',
+  })
   @Column('numeric', {
     default: 0,
   })
   stock: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: ['M', 'L', 'XL'],
+    description: 'Product sizes',
+  })
   @Column('text', {
     array: true,
   })
   sizes: string[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'women',
+    description: 'Product Gender',
+    uniqueItems: true,
+  })
   @Column('text')
   gender: string;
 
   // tags
-  @ApiProperty()
+  @ApiProperty({
+    example: ['nike', 'air max', '90'],
+    description: 'Product tags',
+  })
   @Column('text', {
     array: true,
     default: [],
@@ -70,7 +100,13 @@ export class Product {
   tags: string[];
 
   // images
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      'https://example.com/nike_air_max_90.jpg',
+      'https://example.com/nike_air_max_90_2.jpg',
+    ],
+    description: 'Product image',
+  })
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
     eager: true,
