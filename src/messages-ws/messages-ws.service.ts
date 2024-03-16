@@ -9,7 +9,7 @@ export class MessagesWsService {
   private connectedClients: ConnectedClients = {};
 
   registerClient(client: Socket) {
-    this.connectedClients[client.id];
+    this.connectedClients[client.id] = client;
   }
 
   removeClient(clientId: string) {
@@ -17,6 +17,7 @@ export class MessagesWsService {
   }
 
   getConnectedClients(): string[] {
+    console.log(Object.keys(this.connectedClients));
     return Object.keys(this.connectedClients);
   }
 }

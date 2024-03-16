@@ -17,7 +17,7 @@ export class MessagesWsGateway
 
   constructor(private readonly messagesWsService: MessagesWsService) {}
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
     this.messagesWsService.registerClient(client);
     this.wss.emit(
       'clients-updated',
@@ -36,6 +36,22 @@ export class MessagesWsGateway
   // message-from-client
   @SubscribeMessage('message-from-client')
   handlerMessageFromClient(client: Socket, payload: NewMessageDto) {
-    console.log(client.id, payload);
+    //! Emite unicamente al cliente.
+    // client.emit('message-from-server', {
+    //   fullName: 'Soy yo',
+    //   message: payload.message || 'no-message!!',
+    // });
+
+    //! Emitir a todos MENOS, al cliente inicial
+    // client.broadcast.emit('message-from-server', {
+    //   fullName: 'Soy yo',
+    //   message: payload.message || 'no-message!!',
+    // });
+
+    this.wss.emit('message-from-server', {
+      id: client.id,
+      fullName: 'Soy yo',
+      message: payload.message || 'no-message!!',
+    });
   }
 }
