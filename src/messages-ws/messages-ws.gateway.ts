@@ -4,7 +4,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { MessagesWsService } from './messages-ws.service';
 import { Server, Socket } from 'socket.io';
@@ -23,22 +22,19 @@ export class MessagesWsGateway
     private readonly jwtService: JwtService,
   ) {}
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization as string;
-    console.log({ token });
     let payload: JwtPayload;
 
     try {
       payload = this.jwtService.verify(token);
+      await this.messagesWsService.registerClient(client, payload.id);
     } catch (error) {
       client.disconnect();
       // throw new WsException('Invalid credentials');
       return;
     }
 
-    console.log(payload);
-
-    this.messagesWsService.registerClient(client);
     this.wss.emit(
       'clients-updated',
       this.messagesWsService.getConnectedClients(),
@@ -70,7 +66,7 @@ export class MessagesWsGateway
 
     this.wss.emit('message-from-server', {
       id: client.id,
-      fullName: 'Soy yo',
+      fullName: this.messagesWsService.getUserFullName(client.id),
       message: payload.message || 'no-message!!',
     });
   }
